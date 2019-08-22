@@ -2,7 +2,7 @@
 
 #### [Assignment link](https://www.theodinproject.com/courses/ruby-programming/lessons/advanced-building-blocks)
 
-#### [View in broswer](https://r4ajeti.github.io/Advanced_Building_Blocks/)
+#### [View in broswer](https://AdvancedBuildingBlocks.r4ajeti.repl.run)
 
 # Language
 
