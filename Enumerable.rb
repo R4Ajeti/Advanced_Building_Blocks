@@ -1,152 +1,141 @@
+# frozen_string_literal: true
+
 module Enumerable
-    def my_each
-      for i in 0..self.length-1
-        yield(self[i])
+  def my_each
+    (0..length - 1).each do |i|
+      yield(self[i])
+    end
+  end
+
+  def my_each_with_index
+    (0..length - 1).each do |i|
+      yield(self[i], i)
+    end
+  end
+
+  def my_select
+    array = []
+    my_each do |x|
+      array << x if yield(x)
+    end
+    array
+  end
+
+  def my_all?
+    bool = true
+    my_each do |x|
+      bool = false unless yield(x)
+    end
+    bool
+  end
+
+  def my_any?
+    bool = false
+    my_each do |x|
+      bool = true if yield(x)
+    end
+    bool
+  end
+
+  def my_none?(*args)
+    bool = true
+    my_each do |x|
+      case args.length
+      when 0
+        bool = false unless yield(x)
+      when 1
+        bool = false if x == args.first
+      else
+        raise ArgumentError
       end
     end
-    
-    def my_each_with_index
-        for i in 0..self.length-1
-            yield(self[i], i)
-        end
-    end
+    bool
+  end
 
-    def my_select
-        array = []
-        self.my_each do |x|
-            if yield(x)
-                array << x
-            end
-        end
-        array
+  def my_count(*args)
+    count = 0
+    case args.length
+    when 0
+      puts ' -- 0'
+      my_each do |x|
+        count += 1 if yield(x)
+      end
+    when 1
+      puts ' -- 1 '
+      my_each do |x|
+        count += 1 if args.first == x
+      end
+    else
+      raise ArgumentError
     end
-    def my_all?
-        bool = true
-        self.my_each do |x|
-            if !yield(x)
-                bool = false
-            end
-        end
-        bool
-    end
-    def my_any?
-        bool = false
-        self.my_each do |x|
-            if yield(x)
-                bool = true
-            end
-        end
-        bool
-    end
-    def my_none?(*args)
-        bool = true
-        self.my_each do |x|
-        case args.length
-        when 0
-            if !yield(x)
-                bool = false
-            end
-        when 1
-            if x==args.first
-                bool = false
-            end
-        else
-            raise ArgumentError
-        end
-        end
-        bool
-    end
+    count
+  end
 
-    def my_count(*args)
-        count = 0
-        case args.length
-        when 0
-            puts ' -- 0'
-            self.my_each do |x|
-                if yield(x)
-                    count = count + 1
-                end
-            end
-        when 1
-            puts ' -- 1 '
-            self.my_each do |x|
-                if args.first == x
-                    count = count + 1
-                end
-            end
-        else
-            raise ArgumentError
-        end
-        count
+  def my_count?
+    count = 0
+    my_each do |x|
+      count += 1 if yield(x)
     end
+    count
+  end
 
-    def my_count?
-        count = 0
-        self.my_each do |x|
-            if yield(x)
-                count += 1
-            end
-        end
-        count
+  def my_map
+    array = []
+    my_each do |x|
+      array.push(yield(x))
     end
+    array
+  end
 
-    def my_map(&block)
-        array = []
-        self.my_each do |x|
-            array.push(yield(x))
-        end
-        array
+  def my_inject(*_item)
+    acc = self[0]
+    self[1..length].each do |x|
+      acc = yield(acc, x)
     end
-
-    def my_inject (*item)
-        acc = self[0]
-        for x in self[1..self.length] do
-            acc = yield(acc, x)
-        end
-        return acc
-    end
+    acc
+  end
 end
 
 def multiply_els(list)
-    return list.my_inject(1) { |acc, nr| acc*nr }
+  list.my_inject(1) { |acc, nr| acc * nr }
 end
 
 puts 'Enumerate Methods: '
 puts 'my_each method imp -> '
-[8, 2, 5, 4].my_each{ |num| puts num }
+[8, 2, 5, 4].my_each { |num| puts num }
 
 puts 'my_each_with_index -> '
-[8, 2, 5, 4].my_each_with_index{ |num, ind| puts "Elem: #{num} and it's index: #{ind}" }
+[8, 2, 5, 4].my_each_with_index { |num, ind| puts "Elem: #{num} and it's index: #{ind}" }
 
 puts 'my_select method by using my_each -> '
-strings = %w(ruby html javascript)
-p ss = strings.my_select {|words| words.include?('r') }
+strings = %w[ruby html javascript]
+p ss = strings.my_select { |words| words.include?('r') }
 
 puts 'my_all? method by using my_each -> '
-p ['ab', 'abc', 'abcdta'].my_all? { |x| x.length >= 2 }
+p %w[ab abc abcdta].my_all? { |x| x.length >= 2 }
 
 puts 'my_any? method by using my_each -> '
-p ['Ariel','Camus','Gaby','Willow','Lydia'].my_any? { |a| a.include?('y') }
+p %w[Ariel Camus Gaby Willow Lydia].my_any? { |a| a.include?('y') }
 
 puts 'my_none? method by using my_each -> without blocks '
-p ['ab','abc','abcdta'].my_none? { |x| x.length < 2 }
+p %w[ab abc abcdta].my_none? { |x| x.length < 2 }
 puts 'my_none? method by using my_each -> with arguments'
 p [2, 5, 8, 6, 4, 1, 2, 3].my_none?(9)
 
 puts 'my_count? method by using my_each -> '
 puts 'How many numbers are even? '
-p [2, 5, 8, 6, 4, 1, 2, 3].my_count?{ |x| x%2==0 }
+p [2, 5, 8, 6, 4, 1, 2, 3].my_count?(&:even?)
 puts 'How many words in array?'
-p ['ab', 'abc', 'abcdta'].my_count?{ |x| true }
+p %w[ab abc abcdta].my_count? { |_x| true }
 puts 'How many 2 in array? using count?'
-p [2, 5, 8, 6, 4, 1, 2, 3].my_count?{ |x| x==2 }
+p [2, 5, 8, 6, 4, 1, 2, 3].my_count? { |x| x == 2 }
 
 puts 'How many 2 in array? using count '
 p [2, 5, 8, 6, 4, 1, 2, 3].my_count(2)
 
 puts 'my_map method by using my_each -> '
 puts 'Double current values!'
-p [2, 5, 8, 6, 4, 1, 2, 3].my_map { |num| num*2 }
+p [2, 5, 8, 6, 4, 1, 2, 3].my_map { |num| num * 2 }
 
 puts 'multiply_els method using my_inject -> '
 var1 = multiply_els([2, 4, 5])
@@ -154,4 +143,4 @@ print var1
 puts ''
 
 puts 'my_inject method -> '
-p [2, 4, 5].my_inject { |a,b| a*b }
+p [2, 4, 5].my_inject { |a, b| a * b }
