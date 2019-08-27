@@ -56,12 +56,10 @@ module Enumerable
     count = 0
     case args.length
     when 0
-      puts ' -- 0'
       my_each do |x|
         count += 1 if yield(x)
       end
     when 1
-      puts ' -- 1 '
       my_each do |x|
         count += 1 if args.first == x
       end
@@ -144,3 +142,7 @@ puts ''
 
 puts 'my_inject method -> '
 p [2, 4, 5].my_inject { |a, b| a * b }
+
+puts 'my_none?, my_count methods with arguments!!!!! -> '
+p [1,2,3,4,5].my_none?(2)
+p [1,2,3,4,5].my_count(2)
