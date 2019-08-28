@@ -38,13 +38,14 @@ module Enumerable
   end
 
   def my_none?(*args)
-    bool = true
+    bool = false
     my_each do |x|
       case args.length
       when 0
-        bool = false unless yield(x)
+        bool = !yield(x) if block_given?
+        break unless bool
       when 1
-        bool = false if x == args.first
+        bool = true if x == args.first
       else
         raise ArgumentError
       end
@@ -57,7 +58,11 @@ module Enumerable
     case args.length
     when 0
       my_each do |x|
-        count += 1 if yield(x)
+        if block_given?
+          count += 1
+        else 
+          count += 1
+        end 
       end
     when 1
       my_each do |x|
@@ -146,3 +151,9 @@ p [2, 4, 5].my_inject { |a, b| a * b }
 puts 'my_none?, my_count methods with arguments!!!!! -> '
 p [1,2,3,4,5].my_none?(2)
 p [1,2,3,4,5].my_count(2)
+puts '[1,2,3,4,5,6,7,8].my_count'
+p [1,2,3,4,5,6,7,8].my_count
+puts '[1,2,3,4,5,6,7,8].my_none? { |num| num > 10}'
+p [1,2,3,4,5,6,7,8].my_none? { |num| num > 10}
+puts '[1,2,3,4,5,6,7,8].none? { |num| num > 10}'
+p [1,2,3,4,5,6,7,8].none? { |num| num > 10}
