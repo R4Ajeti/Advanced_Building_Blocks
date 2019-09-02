@@ -59,7 +59,7 @@ module Enumerable
     when 0
       my_each do |x|
         if block_given?
-          count += 1
+          count += 1 if yield(x)
         else 
           count += 1
         end 
@@ -157,3 +157,7 @@ puts '[1,2,3,4,5,6,7,8].my_none? { |num| num > 10}'
 p [1,2,3,4,5,6,7,8].my_none? { |num| num > 10}
 puts '[1,2,3,4,5,6,7,8].none? { |num| num > 10}'
 p [1,2,3,4,5,6,7,8].none? { |num| num > 10}
+puts '[1,2,3,4,5,6,7,8].count { |x| x.even? }'
+p [1,2,3,4,5,6,7,8].count { |x| x.even? }
+puts '[1,2,3,4,5,6,7,8].my_count { |x| x.even? }'
+p [1,2,3,4,5,6,7,8].my_count { |x| x.even? }
