@@ -60,9 +60,9 @@ module Enumerable
       my_each do |x|
         if block_given?
           count += 1 if yield(x)
-        else 
+        else
           count += 1
-        end 
+        end
       end
     when 1
       my_each do |x|
@@ -149,15 +149,15 @@ puts 'my_inject method -> '
 p [2, 4, 5].my_inject { |a, b| a * b }
 
 puts 'my_none?, my_count methods with arguments!!!!! -> '
-p [1,2,3,4,5].my_none?(2)
-p [1,2,3,4,5].my_count(2)
+p [1, 2, 3, 4, 5].my_none?(2)
+p [1, 2, 3, 4, 5].my_count(2)
 puts '[1,2,3,4,5,6,7,8].my_count'
-p [1,2,3,4,5,6,7,8].my_count
+p [1, 2, 3, 4, 5, 6, 7, 8].my_count
 puts '[1,2,3,4,5,6,7,8].my_none? { |num| num > 10}'
-p [1,2,3,4,5,6,7,8].my_none? { |num| num > 10}
+p [1, 2, 3, 4, 5, 6, 7, 8].my_none? { |num| num > 10 }
 puts '[1,2,3,4,5,6,7,8].none? { |num| num > 10}'
-p [1,2,3,4,5,6,7,8].none? { |num| num > 10}
+p [1, 2, 3, 4, 5, 6, 7, 8].none? { |num| num > 10 }
 puts '[1,2,3,4,5,6,7,8].count { |x| x.even? }'
-p [1,2,3,4,5,6,7,8].count { |x| x.even? }
+p [1, 2, 3, 4, 5, 6, 7, 8].count(&:even?)
 puts '[1,2,3,4,5,6,7,8].my_count { |x| x.even? }'
-p [1,2,3,4,5,6,7,8].my_count { |x| x.even? }
+p [1, 2, 3, 4, 5, 6, 7, 8].my_count(&:even?)
